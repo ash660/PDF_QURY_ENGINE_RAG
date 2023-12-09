@@ -23,6 +23,7 @@ with st.sidebar:
 
 def main():
     st.header("Chat with PDF 💬")
+    st.text("Ask a question about your documents:")
 
     load_dotenv()
 
@@ -47,7 +48,7 @@ def main():
     )
     chunks = text_splitter.split_documents(docs)
 
-    st.write(chunks)
+    #st.write(chunks)
 
     store_name = "Data"
     embeddings = OpenAIEmbeddings()
