@@ -18,12 +18,12 @@ from langchain.document_loaders import DirectoryLoader
 with st.sidebar:
     
     st.title('🤖💬 OpenAI Chatbot')
-    st.write('💬 Nowcerts Fresh Desk Help!')
-    st.write('Hello! how can I help you?')
+    st.write('💬 Nowcerts Policy Details Help!')
+   
 
 def main():
     st.header("Chat with PDF 💬")
-    st.text("Ask a question about your documents:")
+    st.text("Ask a question about policy documents:")
 
     load_dotenv()
 
@@ -59,14 +59,20 @@ def main():
 
     if "messages" not in st.session_state:
         st.session_state.messages = []
-            
+
+
+    first = "Hi, how can I help you?"
+    with st.chat_message("assistant"):
+            st.markdown(first)
+            #st.session_state.messages.append({"role": "assistant", "content": first})        
 
     for message in st.session_state.messages:
         with st.chat_message(message["role"]):
             st.markdown(message["content"])
+    
+    
 
-
-    if prompt := st.chat_input("Say something.."):
+    if prompt := st.chat_input("Please ask question related to policy docs.."):
         st.session_state.messages.append({"role": "user", "content": prompt})
         with st.chat_message("user"):
             st.markdown(prompt)
@@ -77,7 +83,7 @@ def main():
         docs = VectorStore.similarity_search(query=prompt, k=8)
             #st.write(docs)
 
-        llm = OpenAI()
+        llm = OpenAI(model="gpt-3.5-turbo-instruct")
         chain = load_qa_chain(llm=llm, chain_type="stuff")
         response =chain.run(input_documents=docs, question=prompt)
         
